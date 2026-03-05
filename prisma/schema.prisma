@@ -12,3 +12,18 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Event {
+  id         String   @id @default(cuid())
+  event_type String
+  user_id    String?
+  session_id String?
+  properties Json     @default("{}")
+  timestamp  DateTime @default(now()) @db.Timestamptz(6)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([timestamp(sort: Desc)])
+  @@index([event_type, timestamp(sort: Desc)])
+  @@index([user_id, timestamp(sort: Desc)])
+  @@map("events")
+}
